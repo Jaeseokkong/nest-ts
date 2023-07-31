@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Query, UsePipes, ValidationPipe } from '@n
 import { AppService } from './app.service';
 import { IUserInfo, UserInfo } from './types/user.type';
 import { UserInfoDto, UserQueryIdDto } from './dto/user.dto';
+import { UserEntity } from './entity/user.entity';
 
 @Controller()
 export class AppController {
@@ -9,13 +10,26 @@ export class AppController {
 
 
   @Get("something")
-  somethingLogicUser(@Query() query : UserQueryIdDto) {
-    const payload = UserQueryIdDto.Req(query);
+  somethingLogicUser(@Query() query) {
+    const payload = new UserEntity.Builder().$USER_ID(query.ID).build();
 
     const result = this.appService.somethingLogicToUser(payload);
 
-    return UserQueryIdDto.Res(result);
+    return new UserEntity.Builder()
+      .$USER_ID(result.USER_ID)
+      .$NAME(result.NAME)
+      .$ADR(result.ADR)
+      .build()
   }
+  // @Get("something")
+  // somethingLogicUser(@Query() query : UserQueryIdDto) {
+  //   const payload = UserQueryIdDto.Req(query);
+
+  //   const result = this.appService.somethingLogicToUser(payload);
+
+  //   return UserQueryIdDto.Res(result);
+  // }
+
 
 
 
